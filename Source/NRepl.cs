@@ -257,7 +257,7 @@ namespace Arcadia
 					{
 						{"id", _request["id"]},
 						{"value", value}, // TODO do we need :values?
-                        {"ns", RT.CurrentNSVar.deref().ToString()},
+						{"ns", RT.CurrentNSVar.deref().ToString()},
 						{"session", session.ToString()},
 					}, _client);
 
@@ -268,7 +268,7 @@ namespace Arcadia
 					{
 						{"id", _request["id"]},
 						{"status", new BList {"done"}}, // TODO does this have to be a list?
-                        {"session", session.ToString()},
+						{"session", session.ToString()},
 					}, _client);
 				} catch (Exception e) {
 					starEVar.set(e);
@@ -339,15 +339,15 @@ namespace Arcadia
 					var clojureMinor = (int)clojureVersion.valAt(Keyword.intern("minor"));
 					var clojureIncremental = (int)clojureVersion.valAt(Keyword.intern("incremental"));
 					var clojureQualifier = (string)clojureVersion.valAt(Keyword.intern("qualifier"));
-                    var supportedOps = new BDictionary {
-                        {"eval", 1},
-                        {"load-file", 1},
-                        {"describe", 1},
-                        {"clone", 1},
-                        {"info", 1},
-                        {"eldoc", 1},
+					var supportedOps = new BDictionary {
+						{"eval", 1},
+						{"load-file", 1},
+						{"describe", 1},
+						{"clone", 1},
+						{"info", 1},
+						{"eldoc", 1},
 						{"classpath", 1},
-                    };
+					};
 					// Debug.Log("Autocomplete support is enabled?: " + autoCompletionSupportEnabled);
 					if (autoCompletionSupportEnabled) {
 						supportedOps.Add("complete", 1);
@@ -396,17 +396,17 @@ namespace Arcadia
 				case "eldoc":
 				case "info":
 
-                    String symbolStr = message["symbol"].ToString();
+					String symbolStr = message["symbol"].ToString();
 
-                    // Editors like Calva that support doc-on-hover sometimes will ask about empty strings or spaces
+					// Editors like Calva that support doc-on-hover sometimes will ask about empty strings or spaces
 					if (symbolStr == "" || symbolStr == null || symbolStr == " ") break;
 
 					IPersistentMap symbolMetadata = null;
 					try
 					{
-                        symbolMetadata = (IPersistentMap)metaVar.invoke(nsResolveVar.invoke(
-                            findNsVar.invoke(symbolVar.invoke(message["ns"].ToString())),
-                            symbolVar.invoke(symbolStr)));
+						symbolMetadata = (IPersistentMap)metaVar.invoke(nsResolveVar.invoke(
+							findNsVar.invoke(symbolVar.invoke(message["ns"].ToString())),
+							symbolVar.invoke(symbolStr)));
 					} catch (TypeNotFoundException) { 
 							// We'll just ignore this call if the type cannot be found. This happens sometimes.
 							// TODO: One particular case when this happens is when querying info for a namespace. 
@@ -432,8 +432,8 @@ namespace Arcadia
 									keyStr = "forms-str";
 								}
 								resultMessage[keyStr] = new BString(keyVal);
-						    }
-					    }
+							}
+						}
 							SendMessage(resultMessage, client);
 					} else {
 							SendMessage(
@@ -450,22 +450,22 @@ namespace Arcadia
 					// When autoCompletionSupportEnabled is false, we don't advertise auto-completion support. 
 					// some editors seem to ignore this and request anyway, so we return an unknown op message.
 					if (!autoCompletionSupportEnabled) {
-                        SendMessage(
-                            new BDictionary
-                            {
-                                    {"id", message["id"]},
-                                    {"session", session.ToString()},
-                                    {"status", new BList {"done", "error", "unknown-op"}}
-                            }, client);
+						SendMessage(
+							new BDictionary
+							{
+									{"id", message["id"]},
+									{"session", session.ToString()},
+									{"status", new BList {"done", "error", "unknown-op"}}
+							}, client);
 						break;
 					}
 
 					Namespace ns = Namespace.find(Symbol.create(message["ns"].ToString()));
-                    var sessionBindings = _sessions[session];
+					var sessionBindings = _sessions[session];
 					var completeBindings = sessionBindings;
-                    if (ns != null) {
+					if (ns != null) {
 						completeBindings = completeBindings.assoc(RT.CurrentNSVar, ns);
-                    }
+					}
 
 					// Make sure to eval this in the right namespace
 					Var.pushThreadBindings(completeBindings);
@@ -473,28 +473,28 @@ namespace Arcadia
 					Var.popThreadBindings();
 
 					SendMessage(new BDictionary
-                        {
-                            {"id", message["id"]},
-                            {"session", session.ToString()},
-                            {"status", new BList {"done"}},
+						{
+							{"id", message["id"]},
+							{"session", session.ToString()},
+							{"status", new BList {"done"}},
 							{"completions", completions}
-                        }, client);
+						}, client);
 					break;
 				case "classpath":
-                    BList classpath = new BList();
+					BList classpath = new BList();
 					foreach (String p in Environment.GetEnvironmentVariable("CLOJURE_LOAD_PATH").Split(System.IO.Path.PathSeparator)) {
 						if (p != "") {
-                            classpath.Add(Path.GetFullPath(p));
-                        }
-                    }
+							classpath.Add(Path.GetFullPath(p));
+						}
+					}
 
 					SendMessage(new BDictionary
-                        {
-                            {"id", message["id"]},
-                            {"session", session.ToString()},
-                            {"status", new BList {"done"}},
+						{
+							{"id", message["id"]},
+							{"session", session.ToString()},
+							{"status", new BList {"done"}},
 							{"classpath", classpath},
-                        }, client);
+						}, client);
 					break;
 				default:
 					SendMessage(

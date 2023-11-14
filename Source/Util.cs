@@ -25,12 +25,12 @@ namespace Arcadia
 			public T Item1;
 			public V Item2;
 
-            public Tuple2(T item1, V item2)
-            {
-                Item1 = item1;
-                Item2 = item2;
-            }
-        }
+			public Tuple2(T item1, V item2)
+			{
+				Item1 = item1;
+				Item2 = item2;
+			}
+		}
 
 		// ==================================================================
 		// namespace and Var loading
