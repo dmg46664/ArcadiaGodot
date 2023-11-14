@@ -110,13 +110,13 @@
   Godot.Vector3   7
   Godot.Transform2D 8
   Godot.Plane     9
-  Godot.Quat      10
-  Godot.AABB      11
+  Godot.Quaternion      10
+  Godot.Aabb      11
   Godot.Basis     12
-  Godot.Transform 13
+  Godot.Transform3D 13
   Godot.Color     14
   Godot.NodePath  15
-  Godot.RID       16
+  Godot.Rid       16
   Godot.GodotObject    17
   Godot.Collections.Dictionary 18
   Godot.Collections.Array 19
@@ -237,7 +237,7 @@
   "Retrieves state stored on an object's ArcadiaHook, second arity retrieves by key k"
   ([^Node node k] (get (state node) k))
   ([^Node node]
-    (if-let [^ArcadiaHook hook (Arcadia.Util/GetHook node)] 
+    (if-let [^Arcadia.ArcadiaHook hook (Arcadia.Util/GetHook node)] 
       (.state hook))))
 
 (defn update-state
